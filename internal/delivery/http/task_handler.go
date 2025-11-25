@@ -3,6 +3,7 @@ package http
 import (
 	"github.com/gofiber/fiber/v2"
 
+	"github.com/G20-00/task-management-service-go/internal/domain"
 	"github.com/G20-00/task-management-service-go/internal/usecase/task"
 	"github.com/G20-00/task-management-service-go/pkg/logger"
 )
@@ -72,7 +73,18 @@ func (h *TaskHandler) CreateTask(c *fiber.Ctx) error {
 }
 
 func (h *TaskHandler) GetTasks(c *fiber.Ctx) error {
-	tasks, err := h.service.GetAll()
+	status := c.Query("status")
+	priority := c.Query("priority")
+
+	var tasks []*domain.Task
+	var err error
+
+	if status != "" || priority != "" {
+		tasks, err = h.service.GetByFilters(status, priority)
+	} else {
+		tasks, err = h.service.GetAll()
+	}
+
 	if err != nil {
 		logger.GetLogger().WithFields(map[string]interface{}{
 			"layer":  "handler",

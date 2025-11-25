@@ -3,16 +3,19 @@ package http
 import (
 	"github.com/gofiber/fiber/v2"
 
+	"github.com/G20-00/task-management-service-go/internal/usecase/task"
 	"github.com/G20-00/task-management-service-go/internal/usecase/tasklist"
 )
 
 type TaskListHandler struct {
-	service *tasklist.Service
+	service     *tasklist.Service
+	taskService *task.Service
 }
 
-func NewTaskListHandler(service *tasklist.Service) *TaskListHandler {
+func NewTaskListHandler(service *tasklist.Service, taskService *task.Service) *TaskListHandler {
 	return &TaskListHandler{
-		service: service,
+		service:     service,
+		taskService: taskService,
 	}
 }
 
@@ -39,11 +42,12 @@ func (h *TaskListHandler) CreateTaskList(c *fiber.Ctx) error {
 	}
 
 	response := TaskListResponse{
-		ID:          list.ID,
-		Name:        list.Name,
-		Description: list.Description,
-		CreatedAt:   list.CreatedAt,
-		UpdatedAt:   list.UpdatedAt,
+		ID:                   list.ID,
+		Name:                 list.Name,
+		Description:          list.Description,
+		CompletionPercentage: 0.0,
+		CreatedAt:            list.CreatedAt,
+		UpdatedAt:            list.UpdatedAt,
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(response)
@@ -59,12 +63,14 @@ func (h *TaskListHandler) GetTaskLists(c *fiber.Ctx) error {
 
 	responses := make([]TaskListResponse, len(lists))
 	for i, list := range lists {
+		percentage := h.calculateCompletionPercentage(list.ID)
 		responses[i] = TaskListResponse{
-			ID:          list.ID,
-			Name:        list.Name,
-			Description: list.Description,
-			CreatedAt:   list.CreatedAt,
-			UpdatedAt:   list.UpdatedAt,
+			ID:                   list.ID,
+			Name:                 list.Name,
+			Description:          list.Description,
+			CompletionPercentage: percentage,
+			CreatedAt:            list.CreatedAt,
+			UpdatedAt:            list.UpdatedAt,
 		}
 	}
 
@@ -82,11 +88,12 @@ func (h *TaskListHandler) GetTaskList(c *fiber.Ctx) error {
 	}
 
 	response := TaskListResponse{
-		ID:          list.ID,
-		Name:        list.Name,
-		Description: list.Description,
-		CreatedAt:   list.CreatedAt,
-		UpdatedAt:   list.UpdatedAt,
+		ID:                   list.ID,
+		Name:                 list.Name,
+		Description:          list.Description,
+		CompletionPercentage: h.calculateCompletionPercentage(list.ID),
+		CreatedAt:            list.CreatedAt,
+		UpdatedAt:            list.UpdatedAt,
 	}
 
 	return c.JSON(response)
@@ -140,4 +147,27 @@ func (h *TaskListHandler) DeleteTaskList(c *fiber.Ctx) error {
 	}
 
 	return c.SendStatus(fiber.StatusNoContent)
+}
+
+func (h *TaskListHandler) calculateCompletionPercentage(listID string) float64 {
+	tasks, err := h.taskService.GetByFilters("", "")
+	if err != nil {
+		return 0.0
+	}
+
+	var totalTasks, completedTasks int
+	for _, t := range tasks {
+		if t.ListID == listID {
+			totalTasks++
+			if t.Status == "completed" {
+				completedTasks++
+			}
+		}
+	}
+
+	if totalTasks == 0 {
+		return 0.0
+	}
+
+	return (float64(completedTasks) / float64(totalTasks)) * 100
 }

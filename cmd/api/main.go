@@ -40,7 +40,7 @@ func main() {
 
 	taskListRepo := repository.NewPostgresTaskListRepository(database)
 	taskListService := tasklist.NewService(taskListRepo)
-	taskListHandler := http.NewTaskListHandler(taskListService)
+	taskListHandler := http.NewTaskListHandler(taskListService, taskService)
 
 	http.RegisterRoutes(app, taskHandler, taskListHandler)
 

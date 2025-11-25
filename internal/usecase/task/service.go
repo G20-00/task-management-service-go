@@ -73,6 +73,20 @@ func (s *Service) GetAll() (tasks []*domain.Task, err error) {
 	return s.repo.GetAll()
 }
 
+func (s *Service) GetByFilters(status, priority string) (tasks []*domain.Task, err error) {
+	defer utils.RecoverPanic("service", "GetByFilters", &err)
+
+	if status != "" && !validStatuses[status] {
+		return nil, errors.New("invalid status")
+	}
+
+	if priority != "" && !validPriorities[priority] {
+		return nil, errors.New("invalid priority")
+	}
+
+	return s.repo.GetByFilters(status, priority)
+}
+
 func (s *Service) GetByID(id string) (task *domain.Task, err error) {
 	defer utils.RecoverPanic("service", "GetByID", &err)
 

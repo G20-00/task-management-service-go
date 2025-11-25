@@ -8,4 +8,6 @@ type Repository interface {
 	GetByID(id string) (*domain.Task, error)
 	Update(task *domain.Task) error
 	Delete(id string) error
+	GetByFilters(status, priority string) ([]*domain.Task, error)
+	CountByListIDAndStatus(listID, status string) (int, error)
 }

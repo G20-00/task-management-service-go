@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/G20-00/task-management-service-go/internal/domain"
 )
@@ -94,4 +95,53 @@ func (r *PostgresTaskRepository) Delete(id string) error {
 	}
 
 	return nil
+}
+
+func (r *PostgresTaskRepository) GetByFilters(status, priority string) ([]*domain.Task, error) {
+	query := `SELECT id, list_id, title, description, status, priority, created_at, updated_at 
+	          FROM tasks WHERE 1=1`
+	args := []interface{}{}
+	argCount := 1
+
+	if status != "" {
+		query += ` AND status = $` + fmt.Sprintf("%d", argCount)
+		args = append(args, status)
+		argCount++
+	}
+
+	if priority != "" {
+		query += ` AND priority = $` + fmt.Sprintf("%d", argCount)
+		args = append(args, priority)
+	}
+
+	query += ` ORDER BY created_at DESC`
+
+	rows, err := r.db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	tasks := []*domain.Task{}
+	for rows.Next() {
+		task := &domain.Task{}
+		if err := rows.Scan(&task.ID, &task.ListID, &task.Title, &task.Description, &task.Status, &task.Priority, &task.CreatedAt, &task.UpdatedAt); err != nil {
+			return nil, err
+		}
+		tasks = append(tasks, task)
+	}
+
+	return tasks, rows.Err()
+}
+
+func (r *PostgresTaskRepository) CountByListIDAndStatus(listID, status string) (int, error) {
+	query := `SELECT COUNT(*) FROM tasks WHERE list_id = $1 AND status = $2`
+
+	var count int
+	err := r.db.QueryRow(query, listID, status).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
 }

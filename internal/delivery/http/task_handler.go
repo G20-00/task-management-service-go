@@ -1,9 +1,10 @@
 package http
 
 import (
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/G20-00/task-management-service-go/internal/usecase/task"
 	"github.com/G20-00/task-management-service-go/pkg/logger"
-	"github.com/gofiber/fiber/v2"
 )
 
 type TaskHandler struct {

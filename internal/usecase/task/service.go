@@ -5,9 +5,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/G20-00/task-management-service-go/internal/domain"
 	"github.com/G20-00/task-management-service-go/pkg/utils"
-	"github.com/google/uuid"
 )
 
 var validStatuses = map[string]bool{

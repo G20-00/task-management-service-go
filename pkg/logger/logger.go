@@ -9,24 +9,24 @@ import (
 )
 
 var (
-	instance *logrus.Logger
-	once     sync.Once
+	loggerInstance *logrus.Logger
+	once           sync.Once
 )
 
 func GetLogger() *logrus.Logger {
 	once.Do(func() {
-		instance = logrus.New()
+		loggerInstance = logrus.New()
 
-		instance.SetFormatter(&logrus.JSONFormatter{})
+		loggerInstance.SetFormatter(&logrus.JSONFormatter{})
 
-		file, err := os.OpenFile("logs.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+		file, err := os.OpenFile("logs.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
 		if err != nil {
-			instance.SetOutput(os.Stdout)
+			loggerInstance.SetOutput(os.Stdout)
 		} else {
-			instance.SetOutput(io.MultiWriter(os.Stdout, file))
+			loggerInstance.SetOutput(io.MultiWriter(os.Stdout, file))
 		}
 
-		instance.SetLevel(logrus.InfoLevel)
+		loggerInstance.SetLevel(logrus.InfoLevel)
 	})
-	return instance
+	return loggerInstance
 }

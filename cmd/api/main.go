@@ -10,6 +10,7 @@ import (
 	"github.com/G20-00/task-management-service-go/internal/infrastructure/db"
 	"github.com/G20-00/task-management-service-go/internal/infrastructure/repository"
 	"github.com/G20-00/task-management-service-go/internal/usecase/task"
+	"github.com/G20-00/task-management-service-go/internal/usecase/tasklist"
 )
 
 func main() {
@@ -37,7 +38,11 @@ func main() {
 	taskService := task.NewService(taskRepo)
 	taskHandler := http.NewTaskHandler(taskService)
 
-	http.RegisterRoutes(app, taskHandler)
+	taskListRepo := repository.NewPostgresTaskListRepository(database)
+	taskListService := tasklist.NewService(taskListRepo)
+	taskListHandler := http.NewTaskListHandler(taskListService)
+
+	http.RegisterRoutes(app, taskHandler, taskListHandler)
 
 	if err := app.Listen(":8080"); err != nil {
 		log.Fatalf("Failed to start server: %v", err)

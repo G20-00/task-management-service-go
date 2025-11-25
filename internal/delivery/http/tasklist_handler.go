@@ -1,0 +1,143 @@
+package http
+
+import (
+	"github.com/gofiber/fiber/v2"
+
+	"github.com/G20-00/task-management-service-go/internal/usecase/tasklist"
+)
+
+type TaskListHandler struct {
+	service *tasklist.Service
+}
+
+func NewTaskListHandler(service *tasklist.Service) *TaskListHandler {
+	return &TaskListHandler{
+		service: service,
+	}
+}
+
+func (h *TaskListHandler) CreateTaskList(c *fiber.Ctx) error {
+	var req CreateTaskListRequest
+
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request body",
+		})
+	}
+
+	if req.Name == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Name is required",
+		})
+	}
+
+	list, err := h.service.Create(req.Name, req.Description)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	response := TaskListResponse{
+		ID:          list.ID,
+		Name:        list.Name,
+		Description: list.Description,
+		CreatedAt:   list.CreatedAt,
+		UpdatedAt:   list.UpdatedAt,
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(response)
+}
+
+func (h *TaskListHandler) GetTaskLists(c *fiber.Ctx) error {
+	lists, err := h.service.GetAll()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	responses := make([]TaskListResponse, len(lists))
+	for i, list := range lists {
+		responses[i] = TaskListResponse{
+			ID:          list.ID,
+			Name:        list.Name,
+			Description: list.Description,
+			CreatedAt:   list.CreatedAt,
+			UpdatedAt:   list.UpdatedAt,
+		}
+	}
+
+	return c.JSON(responses)
+}
+
+func (h *TaskListHandler) GetTaskList(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	list, err := h.service.GetByID(id)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	response := TaskListResponse{
+		ID:          list.ID,
+		Name:        list.Name,
+		Description: list.Description,
+		CreatedAt:   list.CreatedAt,
+		UpdatedAt:   list.UpdatedAt,
+	}
+
+	return c.JSON(response)
+}
+
+func (h *TaskListHandler) UpdateTaskList(c *fiber.Ctx) error {
+	id := c.Params("id")
+	var req UpdateTaskListRequest
+
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request body",
+		})
+	}
+
+	list, err := h.service.Update(id, req.Name, req.Description)
+	if err != nil {
+		if err.Error() == "task list not found" {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	response := TaskListResponse{
+		ID:          list.ID,
+		Name:        list.Name,
+		Description: list.Description,
+		CreatedAt:   list.CreatedAt,
+		UpdatedAt:   list.UpdatedAt,
+	}
+
+	return c.JSON(response)
+}
+
+func (h *TaskListHandler) DeleteTaskList(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	if err := h.service.Delete(id); err != nil {
+		if err.Error() == "task list not found" {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.SendStatus(fiber.StatusNoContent)
+}

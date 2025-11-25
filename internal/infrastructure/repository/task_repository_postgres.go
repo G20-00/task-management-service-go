@@ -18,15 +18,15 @@ func NewPostgresTaskRepository(db *sql.DB) *PostgresTaskRepository {
 }
 
 func (r *PostgresTaskRepository) Create(task *domain.Task) error {
-	query := `INSERT INTO tasks (id, title, description, status, created_at, updated_at)
-	          VALUES ($1, $2, $3, $4, $5, $6)`
+	query := `INSERT INTO tasks (id, list_id, title, description, status, priority, created_at, updated_at)
+	          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
 
-	_, err := r.db.Exec(query, task.ID, task.Title, task.Description, task.Status, task.CreatedAt, task.UpdatedAt)
+	_, err := r.db.Exec(query, task.ID, task.ListID, task.Title, task.Description, task.Status, task.Priority, task.CreatedAt, task.UpdatedAt)
 	return err
 }
 
 func (r *PostgresTaskRepository) GetAll() ([]*domain.Task, error) {
-	query := `SELECT id, title, description, status, created_at, updated_at 
+	query := `SELECT id, list_id, title, description, status, priority, created_at, updated_at 
 	          FROM tasks ORDER BY created_at DESC`
 
 	rows, err := r.db.Query(query)
@@ -38,7 +38,7 @@ func (r *PostgresTaskRepository) GetAll() ([]*domain.Task, error) {
 	tasks := []*domain.Task{}
 	for rows.Next() {
 		task := &domain.Task{}
-		if err := rows.Scan(&task.ID, &task.Title, &task.Description, &task.Status, &task.CreatedAt, &task.UpdatedAt); err != nil {
+		if err := rows.Scan(&task.ID, &task.ListID, &task.Title, &task.Description, &task.Status, &task.Priority, &task.CreatedAt, &task.UpdatedAt); err != nil {
 			return nil, err
 		}
 		tasks = append(tasks, task)
@@ -48,11 +48,11 @@ func (r *PostgresTaskRepository) GetAll() ([]*domain.Task, error) {
 }
 
 func (r *PostgresTaskRepository) GetByID(id string) (*domain.Task, error) {
-	query := `SELECT id, title, description, status, created_at, updated_at 
+	query := `SELECT id, list_id, title, description, status, priority, created_at, updated_at 
 	          FROM tasks WHERE id = $1`
 
 	task := &domain.Task{}
-	err := r.db.QueryRow(query, id).Scan(&task.ID, &task.Title, &task.Description, &task.Status, &task.CreatedAt, &task.UpdatedAt)
+	err := r.db.QueryRow(query, id).Scan(&task.ID, &task.ListID, &task.Title, &task.Description, &task.Status, &task.Priority, &task.CreatedAt, &task.UpdatedAt)
 	if err == sql.ErrNoRows {
 		return nil, errors.New("task not found")
 	}
@@ -64,10 +64,10 @@ func (r *PostgresTaskRepository) GetByID(id string) (*domain.Task, error) {
 }
 
 func (r *PostgresTaskRepository) Update(task *domain.Task) error {
-	query := `UPDATE tasks SET title = $2, description = $3, status = $4, updated_at = $5 
+	query := `UPDATE tasks SET list_id = $2, title = $3, description = $4, status = $5, priority = $6, updated_at = $7 
 	          WHERE id = $1`
 
-	result, err := r.db.Exec(query, task.ID, task.Title, task.Description, task.Status, task.UpdatedAt)
+	result, err := r.db.Exec(query, task.ID, task.ListID, task.Title, task.Description, task.Status, task.Priority, task.UpdatedAt)
 	if err != nil {
 		return err
 	}

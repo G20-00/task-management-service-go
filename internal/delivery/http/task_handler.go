@@ -41,7 +41,11 @@ func (h *TaskHandler) CreateTask(c *fiber.Ctx) error {
 		req.Status = "pending"
 	}
 
-	createdTask, err := h.service.Create(req.Title, req.Description)
+	if req.Priority == "" {
+		req.Priority = "medium"
+	}
+
+	createdTask, err := h.service.Create(req.ListID, req.Title, req.Description, req.Priority)
 	if err != nil {
 		logger.GetLogger().WithFields(map[string]interface{}{
 			"layer":  "handler",
@@ -55,9 +59,11 @@ func (h *TaskHandler) CreateTask(c *fiber.Ctx) error {
 
 	response := TaskResponse{
 		ID:          createdTask.ID,
+		ListID:      createdTask.ListID,
 		Title:       createdTask.Title,
 		Description: createdTask.Description,
 		Status:      createdTask.Status,
+		Priority:    createdTask.Priority,
 		CreatedAt:   createdTask.CreatedAt,
 		UpdatedAt:   createdTask.UpdatedAt,
 	}
@@ -82,9 +88,11 @@ func (h *TaskHandler) GetTasks(c *fiber.Ctx) error {
 	for i, t := range tasks {
 		responses[i] = TaskResponse{
 			ID:          t.ID,
+			ListID:      t.ListID,
 			Title:       t.Title,
 			Description: t.Description,
 			Status:      t.Status,
+			Priority:    t.Priority,
 			CreatedAt:   t.CreatedAt,
 			UpdatedAt:   t.UpdatedAt,
 		}
@@ -123,9 +131,11 @@ func (h *TaskHandler) GetTask(c *fiber.Ctx) error {
 
 	response := TaskResponse{
 		ID:          t.ID,
+		ListID:      t.ListID,
 		Title:       t.Title,
 		Description: t.Description,
 		Status:      t.Status,
+		Priority:    t.Priority,
 		CreatedAt:   t.CreatedAt,
 		UpdatedAt:   t.UpdatedAt,
 	}
@@ -168,7 +178,13 @@ func (h *TaskHandler) UpdateTask(c *fiber.Ctx) error {
 		})
 	}
 
-	updatedTask, err := h.service.Update(id, req.Title, req.Description, req.Status)
+	if req.Priority == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Priority is required",
+		})
+	}
+
+	updatedTask, err := h.service.Update(id, req.ListID, req.Title, req.Description, req.Status, req.Priority)
 	if err != nil {
 		if err.Error() == "task not found" {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -189,9 +205,11 @@ func (h *TaskHandler) UpdateTask(c *fiber.Ctx) error {
 
 	response := TaskResponse{
 		ID:          updatedTask.ID,
+		ListID:      updatedTask.ListID,
 		Title:       updatedTask.Title,
 		Description: updatedTask.Description,
 		Status:      updatedTask.Status,
+		Priority:    updatedTask.Priority,
 		CreatedAt:   updatedTask.CreatedAt,
 		UpdatedAt:   updatedTask.UpdatedAt,
 	}

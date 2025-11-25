@@ -2,13 +2,10 @@ package domain
 
 import "time"
 
-type Task struct {
+type TaskList struct {
 	ID          string    `json:"id"`
-	ListID      string    `json:"list_id"`
-	Title       string    `json:"title"`
+	Name        string    `json:"name"`
 	Description string    `json:"description"`
-	Status      string    `json:"status"`
-	Priority    string    `json:"priority"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }

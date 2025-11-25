@@ -1,6 +1,20 @@
 package task
 
-import "github.com/G20-00/task-management-service-go/internal/domain"
+import (
+	"errors"
+	"strings"
+	"time"
+
+	"github.com/G20-00/task-management-service-go/internal/domain"
+	"github.com/G20-00/task-management-service-go/pkg/utils"
+	"github.com/google/uuid"
+)
+
+var validStatuses = map[string]bool{
+	"pending":     true,
+	"in-progress": true,
+	"completed":   true,
+}
 
 type Service struct {
 	repo Repository
@@ -12,22 +26,72 @@ func NewService(repo Repository) *Service {
 	}
 }
 
-func (s *Service) Create(task *domain.Task) error {
-	return s.repo.Create(task)
+func (s *Service) Create(title, description string) (task *domain.Task, err error) {
+	defer utils.RecoverPanic("service", "Create", &err)
+
+	if strings.TrimSpace(title) == "" {
+		return nil, errors.New("title cannot be empty")
+	}
+
+	now := time.Now()
+	newTask := &domain.Task{
+		ID:          uuid.New().String(),
+		Title:       title,
+		Description: description,
+		Status:      "pending",
+		CreatedAt:   now,
+		UpdatedAt:   now,
+	}
+
+	if err := s.repo.Create(newTask); err != nil {
+		return nil, err
+	}
+
+	return newTask, nil
 }
 
-func (s *Service) GetAll() ([]*domain.Task, error) {
+func (s *Service) GetAll() (tasks []*domain.Task, err error) {
+	defer utils.RecoverPanic("service", "GetAll", &err)
+
 	return s.repo.GetAll()
 }
 
-func (s *Service) GetByID(id string) (*domain.Task, error) {
+func (s *Service) GetByID(id string) (task *domain.Task, err error) {
+	defer utils.RecoverPanic("service", "GetByID", &err)
+
 	return s.repo.GetByID(id)
 }
 
-func (s *Service) Update(task *domain.Task) error {
-	return s.repo.Update(task)
+func (s *Service) Update(id, title, description, status string) (task *domain.Task, err error) {
+	defer utils.RecoverPanic("service", "Update", &err)
+
+	if strings.TrimSpace(title) == "" {
+		return nil, errors.New("title cannot be empty")
+	}
+
+	if !validStatuses[status] {
+		return nil, errors.New("invalid status: must be pending, in-progress, or completed")
+	}
+
+	existingTask, err := s.repo.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	existingTask.Title = title
+	existingTask.Description = description
+	existingTask.Status = status
+	existingTask.UpdatedAt = time.Now()
+
+	if err := s.repo.Update(existingTask); err != nil {
+		return nil, err
+	}
+
+	return existingTask, nil
 }
 
-func (s *Service) Delete(id string) error {
+func (s *Service) Delete(id string) (err error) {
+	defer utils.RecoverPanic("service", "Delete", &err)
+
 	return s.repo.Delete(id)
 }

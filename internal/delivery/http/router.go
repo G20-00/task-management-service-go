@@ -2,9 +2,7 @@ package http
 
 import "github.com/gofiber/fiber/v2"
 
-func RegisterRoutes(app *fiber.App) {
-	handler := NewTaskHandler()
-
+func RegisterRoutes(app *fiber.App, handler *TaskHandler) {
 	api := app.Group("/api")
 	tasks := api.Group("/tasks")
 

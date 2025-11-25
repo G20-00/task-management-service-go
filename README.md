@@ -7,13 +7,13 @@ API REST para gestión de tareas construida con Go y Fiber.
 <div style="text-align: left">
     <p>
         <a href="https://go.dev/" target="_blank"> 
-            <img alt="Go" src="https://go.dev/blog/go-brand/Go-Logo/PNG/Go-Logo_Blue.png" height="80" width="80" style="vertical-align: bottom;">
+            <img alt="Go" src="https://go.dev/blog/go-brand/Go-Logo/PNG/Go-Logo_Blue.png" height="60" width="auto" style="vertical-align: bottom;">
         </a>
         <a href="https://docs.docker.com/" target="_blank"> 
-            <img alt="Docker" src="https://miro.medium.com/v2/resize:fit:453/1*QVFjsW8gyIXeCUJucmK4XA.png" height="80" width="80" style="vertical-align: bottom;">
+            <img alt="Docker" src="https://www.docker.com/wp-content/uploads/2022/03/vertical-logo-monochromatic.png" height="60" width="auto" style="vertical-align: bottom;">
         </a>
         <a href="https://www.postgresql.org/" target="_blank">
-            <img src="https://www.postgresql.org/media/img/about/press/elephant.png" height="80" width="80" alt="PostgreSQL" style="vertical-align: bottom;">
+            <img src="https://wiki.postgresql.org/images/a/a4/PostgreSQL_logo.3colors.svg" height="60" width="auto" alt="PostgreSQL" style="vertical-align: bottom;">
         </a>
     </p>
 </div>

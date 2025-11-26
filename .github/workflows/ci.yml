@@ -65,4 +65,9 @@ jobs:
         DB_PASSWORD: postgres
         DB_NAME: task_management
         DB_SSLMODE: disable
-      run: go test -v ./...
+      run: go test -v -cover ./...
+
+    - name: Mostrar porcentaje de cobertura
+      run: |
+        go test -coverprofile=coverage.out ./...
+        go tool cover -func=coverage.out

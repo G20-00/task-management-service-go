@@ -162,6 +162,7 @@ func (h *TaskListHandler) calculateCompletionPercentage(listID string) float64 {
 		return 0.0
 	}
 
+	
 	var totalTasks, completedTasks int
 	for _, t := range tasks {
 		if t.ListID == listID {

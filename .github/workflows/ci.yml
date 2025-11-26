@@ -65,4 +65,4 @@ jobs:
         DB_PASSWORD: postgres
         DB_NAME: task_management
         DB_SSLMODE: disable
-      run: go test -v ./... || echo "No tests found"
+      run: go test -v ./...

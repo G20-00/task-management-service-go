@@ -7,16 +7,19 @@ import (
 	"github.com/G20-00/task-management-service-go/internal/domain"
 )
 
+// PostgresTaskListRepository is a PostgreSQL implementation of task list repository.
 type PostgresTaskListRepository struct {
 	db *sql.DB
 }
 
+// NewPostgresTaskListRepository creates a new PostgresTaskListRepository instance.
 func NewPostgresTaskListRepository(db *sql.DB) *PostgresTaskListRepository {
 	return &PostgresTaskListRepository{
 		db: db,
 	}
 }
 
+// Create inserts a new task list into the database.
 func (r *PostgresTaskListRepository) Create(list *domain.TaskList) error {
 	query := `INSERT INTO task_lists (id, name, description, created_at, updated_at)
 	          VALUES ($1, $2, $3, $4, $5)`
@@ -25,6 +28,7 @@ func (r *PostgresTaskListRepository) Create(list *domain.TaskList) error {
 	return err
 }
 
+// GetAll retrieves all task lists from the database.
 func (r *PostgresTaskListRepository) GetAll() ([]*domain.TaskList, error) {
 	query := `SELECT id, name, description, created_at, updated_at 
 	          FROM task_lists ORDER BY created_at DESC`
@@ -33,7 +37,9 @@ func (r *PostgresTaskListRepository) GetAll() ([]*domain.TaskList, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		_ = rows.Close() //nolint:errcheck,gocritic
+	}()
 
 	lists := []*domain.TaskList{}
 	for rows.Next() {
@@ -47,6 +53,7 @@ func (r *PostgresTaskListRepository) GetAll() ([]*domain.TaskList, error) {
 	return lists, rows.Err()
 }
 
+// GetByID retrieves a single task list by ID.
 func (r *PostgresTaskListRepository) GetByID(id string) (*domain.TaskList, error) {
 	query := `SELECT id, name, description, created_at, updated_at 
 	          FROM task_lists WHERE id = $1`
@@ -63,6 +70,7 @@ func (r *PostgresTaskListRepository) GetByID(id string) (*domain.TaskList, error
 	return list, nil
 }
 
+// Update modifies an existing task list in the database.
 func (r *PostgresTaskListRepository) Update(list *domain.TaskList) error {
 	query := `UPDATE task_lists SET name = $2, description = $3, updated_at = $4 
 	          WHERE id = $1`
@@ -72,7 +80,10 @@ func (r *PostgresTaskListRepository) Update(list *domain.TaskList) error {
 		return err
 	}
 
-	rows, _ := result.RowsAffected()
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
 	if rows == 0 {
 		return errors.New("task list not found")
 	}
@@ -80,6 +91,7 @@ func (r *PostgresTaskListRepository) Update(list *domain.TaskList) error {
 	return nil
 }
 
+// Delete removes a task list from the database.
 func (r *PostgresTaskListRepository) Delete(id string) error {
 	query := `DELETE FROM task_lists WHERE id = $1`
 
@@ -88,7 +100,10 @@ func (r *PostgresTaskListRepository) Delete(id string) error {
 		return err
 	}
 
-	rows, _ := result.RowsAffected()
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
 	if rows == 0 {
 		return errors.New("task list not found")
 	}

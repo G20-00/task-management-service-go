@@ -1,3 +1,4 @@
+// Package http provides HTTP handlers and routing for the task management API.
 package http
 
 import (
@@ -8,16 +9,19 @@ import (
 	"github.com/G20-00/task-management-service-go/pkg/logger"
 )
 
+// TaskHandler handles HTTP requests for task operations.
 type TaskHandler struct {
 	service *task.Service
 }
 
+// NewTaskHandler creates a new TaskHandler instance.
 func NewTaskHandler(service *task.Service) *TaskHandler {
 	return &TaskHandler{
 		service: service,
 	}
 }
 
+// CreateTask handles the creation of a new task.
 func (h *TaskHandler) CreateTask(c *fiber.Ctx) error {
 	var req CreateTaskRequest
 
@@ -72,6 +76,7 @@ func (h *TaskHandler) CreateTask(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(response)
 }
 
+// GetTasks retrieves all tasks or filters them by status and priority.
 func (h *TaskHandler) GetTasks(c *fiber.Ctx) error {
 	status := c.Query("status")
 	priority := c.Query("priority")
@@ -113,6 +118,7 @@ func (h *TaskHandler) GetTasks(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(responses)
 }
 
+// GetTask retrieves a single task by ID.
 func (h *TaskHandler) GetTask(c *fiber.Ctx) error {
 	id := c.Params("id")
 
@@ -155,6 +161,7 @@ func (h *TaskHandler) GetTask(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(response)
 }
 
+// UpdateTask updates an existing task.
 func (h *TaskHandler) UpdateTask(c *fiber.Ctx) error {
 	id := c.Params("id")
 
@@ -229,6 +236,7 @@ func (h *TaskHandler) UpdateTask(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(response)
 }
 
+// DeleteTask deletes a task by ID.
 func (h *TaskHandler) DeleteTask(c *fiber.Ctx) error {
 	id := c.Params("id")
 

@@ -23,16 +23,19 @@ var validPriorities = map[string]bool{
 	"high":   true,
 }
 
+// Service implements the task business logic operations.
 type Service struct {
 	repo Repository
 }
 
+// NewService creates and returns a new task Service instance.
 func NewService(repo Repository) *Service {
 	return &Service{
 		repo: repo,
 	}
 }
 
+// Create creates a new task with the provided details and returns the created task.
 func (s *Service) Create(listID, title, description, priority string) (task *domain.Task, err error) {
 	defer utils.RecoverPanic("service", "Create", &err)
 
@@ -67,12 +70,14 @@ func (s *Service) Create(listID, title, description, priority string) (task *dom
 	return newTask, nil
 }
 
+// GetAll retrieves all tasks from the repository.
 func (s *Service) GetAll() (tasks []*domain.Task, err error) {
 	defer utils.RecoverPanic("service", "GetAll", &err)
 
 	return s.repo.GetAll()
 }
 
+// GetByFilters retrieves tasks filtered by status and/or priority.
 func (s *Service) GetByFilters(status, priority string) (tasks []*domain.Task, err error) {
 	defer utils.RecoverPanic("service", "GetByFilters", &err)
 
@@ -87,12 +92,14 @@ func (s *Service) GetByFilters(status, priority string) (tasks []*domain.Task, e
 	return s.repo.GetByFilters(status, priority)
 }
 
+// GetByID retrieves a task by its ID.
 func (s *Service) GetByID(id string) (task *domain.Task, err error) {
 	defer utils.RecoverPanic("service", "GetByID", &err)
 
 	return s.repo.GetByID(id)
 }
 
+// Update updates an existing task with the provided details and returns the updated task.
 func (s *Service) Update(id, listID, title, description, status, priority string) (task *domain.Task, err error) {
 	defer utils.RecoverPanic("service", "Update", &err)
 
@@ -127,6 +134,7 @@ func (s *Service) Update(id, listID, title, description, status, priority string
 	return existingTask, nil
 }
 
+// Delete removes a task by its ID from the repository.
 func (s *Service) Delete(id string) (err error) {
 	defer utils.RecoverPanic("service", "Delete", &err)
 

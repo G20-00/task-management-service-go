@@ -1,7 +1,9 @@
+// Package http provides HTTP handlers and routing for the task management API.
 package http
 
 import "github.com/gofiber/fiber/v2"
 
+// RegisterRoutes configures all API routes for tasks and task lists.
 func RegisterRoutes(app *fiber.App, taskHandler *TaskHandler, taskListHandler *TaskListHandler) {
 	api := app.Group("/api")
 

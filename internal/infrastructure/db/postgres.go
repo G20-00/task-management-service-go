@@ -1,3 +1,4 @@
+// Package db provides database connection and initialization functionality.
 package db
 
 import (
@@ -8,6 +9,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// NewPostgresDB creates and returns a new PostgreSQL database connection using environment variables for configuration.
 func NewPostgresDB() (*sql.DB, error) {
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")

@@ -7,11 +7,13 @@ import (
 	"github.com/G20-00/task-management-service-go/internal/usecase/tasklist"
 )
 
+// TaskListHandler handles HTTP requests for task list operations.
 type TaskListHandler struct {
 	service     *tasklist.Service
 	taskService *task.Service
 }
 
+// NewTaskListHandler creates a new TaskListHandler instance.
 func NewTaskListHandler(service *tasklist.Service, taskService *task.Service) *TaskListHandler {
 	return &TaskListHandler{
 		service:     service,
@@ -19,6 +21,7 @@ func NewTaskListHandler(service *tasklist.Service, taskService *task.Service) *T
 	}
 }
 
+// CreateTaskList handles the creation of a new task list.
 func (h *TaskListHandler) CreateTaskList(c *fiber.Ctx) error {
 	var req CreateTaskListRequest
 
@@ -53,6 +56,7 @@ func (h *TaskListHandler) CreateTaskList(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(response)
 }
 
+// GetTaskLists retrieves all task lists with their completion percentages.
 func (h *TaskListHandler) GetTaskLists(c *fiber.Ctx) error {
 	lists, err := h.service.GetAll()
 	if err != nil {
@@ -77,6 +81,7 @@ func (h *TaskListHandler) GetTaskLists(c *fiber.Ctx) error {
 	return c.JSON(responses)
 }
 
+// GetTaskList retrieves a single task list by ID with completion percentage.
 func (h *TaskListHandler) GetTaskList(c *fiber.Ctx) error {
 	id := c.Params("id")
 
@@ -99,6 +104,7 @@ func (h *TaskListHandler) GetTaskList(c *fiber.Ctx) error {
 	return c.JSON(response)
 }
 
+// UpdateTaskList updates an existing task list.
 func (h *TaskListHandler) UpdateTaskList(c *fiber.Ctx) error {
 	id := c.Params("id")
 	var req UpdateTaskListRequest
@@ -132,6 +138,7 @@ func (h *TaskListHandler) UpdateTaskList(c *fiber.Ctx) error {
 	return c.JSON(response)
 }
 
+// DeleteTaskList deletes a task list by ID.
 func (h *TaskListHandler) DeleteTaskList(c *fiber.Ctx) error {
 	id := c.Params("id")
 

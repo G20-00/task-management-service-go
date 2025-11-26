@@ -2,6 +2,7 @@ package domain
 
 import "time"
 
+// TaskList represents a collection of tasks with its properties and metadata.
 type TaskList struct {
 	ID          string    `json:"id"`
 	Name        string    `json:"name"`

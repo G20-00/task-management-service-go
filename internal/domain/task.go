@@ -1,7 +1,9 @@
+// Package domain defines the core business entities and data structures.
 package domain
 
 import "time"
 
+// Task represents a task item with its properties and metadata.
 type Task struct {
 	ID          string    `json:"id"`
 	ListID      string    `json:"list_id"`

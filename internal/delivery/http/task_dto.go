@@ -2,6 +2,7 @@ package http
 
 import "time"
 
+// CreateTaskRequest represents the request body for creating a task.
 type CreateTaskRequest struct {
 	ListID      string `json:"list_id"`
 	Title       string `json:"title"`
@@ -10,6 +11,7 @@ type CreateTaskRequest struct {
 	Priority    string `json:"priority"`
 }
 
+// UpdateTaskRequest represents the request body for updating a task.
 type UpdateTaskRequest struct {
 	ListID      string `json:"list_id"`
 	Title       string `json:"title"`
@@ -18,6 +20,7 @@ type UpdateTaskRequest struct {
 	Priority    string `json:"priority"`
 }
 
+// TaskResponse represents the response body for a task.
 type TaskResponse struct {
 	ID          string    `json:"id"`
 	ListID      string    `json:"list_id"`

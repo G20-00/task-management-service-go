@@ -1,3 +1,4 @@
+// Package logger provides a singleton logger instance for application-wide logging.
 package logger
 
 import (
@@ -13,6 +14,7 @@ var (
 	once           sync.Once
 )
 
+// GetLogger returns the singleton logger instance configured with JSON formatting and file output.
 func GetLogger() *logrus.Logger {
 	once.Do(func() {
 		loggerInstance = logrus.New()

@@ -74,15 +74,3 @@ func TestCreateTask_EmptyTitle(t *testing.T) {
 		t.Error("Expected error for empty title, got nil")
 	}
 }
-
-func TestCreateTask_InvalidPriority(t *testing.T) {
-	repo := &MockRepository{}
-	service := NewService(repo)
-
-	_, err := service.Create("list-123", "Test Task", "Description", "invalid")
-
-	// This test will FAIL intentionally to test CI
-	if err != nil {
-		t.Error("Expected no error, but got one (intentional fail for CI test)")
-	}
-}

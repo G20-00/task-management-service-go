@@ -7,17 +7,19 @@ import "github.com/gofiber/fiber/v2"
 func RegisterRoutes(app *fiber.App, taskHandler *TaskHandler, taskListHandler *TaskListHandler) {
 	api := app.Group("/api")
 
-	tasks := api.Group("/tasks")
+	api.Post("/login", AuthHandler)
+
+	tasks := api.Group("/tasks", JWTMiddleware)
 	tasks.Post("/", taskHandler.CreateTask)
 	tasks.Get("/", taskHandler.GetTasks)
-	tasks.Get("/:id", taskHandler.GetTask)
-	tasks.Put("/:id", taskHandler.UpdateTask)
-	tasks.Delete("/:id", taskHandler.DeleteTask)
+	tasks.Get(":id", taskHandler.GetTask)
+	tasks.Put(":id", taskHandler.UpdateTask)
+	tasks.Delete(":id", taskHandler.DeleteTask)
 
-	lists := api.Group("/lists")
+	lists := api.Group("/lists", JWTMiddleware)
 	lists.Post("/", taskListHandler.CreateTaskList)
 	lists.Get("/", taskListHandler.GetTaskLists)
-	lists.Get("/:id", taskListHandler.GetTaskList)
-	lists.Put("/:id", taskListHandler.UpdateTaskList)
-	lists.Delete("/:id", taskListHandler.DeleteTaskList)
+	lists.Get(":id", taskListHandler.GetTaskList)
+	lists.Put(":id", taskListHandler.UpdateTaskList)
+	lists.Delete(":id", taskListHandler.DeleteTaskList)
 }

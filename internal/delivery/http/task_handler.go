@@ -5,17 +5,26 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/G20-00/task-management-service-go/internal/domain"
-	"github.com/G20-00/task-management-service-go/internal/usecase/task"
 	"github.com/G20-00/task-management-service-go/pkg/logger"
 )
 
-// TaskHandler handles HTTP requests for task operations.
+// TaskService define la interfaz para operaciones de tareas.
+type TaskService interface {
+	Create(listID, title, description, priority string) (*domain.Task, error)
+	GetAll() ([]*domain.Task, error)
+	GetByFilters(status, priority string) ([]*domain.Task, error)
+	GetByID(id string) (*domain.Task, error)
+	Update(id, listID, title, description, status, priority string) (*domain.Task, error)
+	Delete(id string) error
+}
+
+// TaskHandler maneja las operaciones relacionadas con tareas HTTP.
 type TaskHandler struct {
-	service *task.Service
+	service TaskService
 }
 
 // NewTaskHandler creates a new TaskHandler instance.
-func NewTaskHandler(service *task.Service) *TaskHandler {
+func NewTaskHandler(service TaskService) *TaskHandler {
 	return &TaskHandler{
 		service: service,
 	}
@@ -163,7 +172,7 @@ func (h *TaskHandler) GetTask(c *fiber.Ctx) error {
 
 // UpdateTask updates an existing task.
 func (h *TaskHandler) UpdateTask(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id := c.Params("taskId")
 
 	if id == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -238,7 +247,7 @@ func (h *TaskHandler) UpdateTask(c *fiber.Ctx) error {
 
 // DeleteTask deletes a task by ID.
 func (h *TaskHandler) DeleteTask(c *fiber.Ctx) error {
-	id := c.Params("id")
+	id := c.Params("taskId")
 
 	if id == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

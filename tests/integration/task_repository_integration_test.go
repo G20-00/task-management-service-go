@@ -21,47 +21,6 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func getTestDB(t *testing.T) *sql.DB {
-	host := os.Getenv("DB_HOST")
-	if host == "" {
-		host = "localhost"
-	}
-	port := os.Getenv("DB_PORT")
-	if port == "" {
-		port = "5432"
-	}
-	user := os.Getenv("DB_USER")
-	if user == "" {
-		user = "postgres"
-	}
-	password := os.Getenv("DB_PASSWORD")
-	if password == "" {
-		password = "postgres"
-	}
-	dbname := os.Getenv("DB_NAME")
-	if dbname == "" {
-		dbname = "task_management"
-	}
-	sslmode := os.Getenv("DB_SSLMODE")
-	if sslmode == "" {
-		sslmode = "disable"
-	}
-
-	connStr := "host=" + host + " port=" + port + " user=" + user +
-		" password=" + password + " dbname=" + dbname + " sslmode=" + sslmode
-
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		t.Skipf("Skipping integration test: cannot connect to database: %v", err)
-	}
-
-	if err := db.Ping(); err != nil {
-		t.Skipf("Skipping integration test: database not available: %v", err)
-	}
-
-	return db
-}
-
 func cleanupTasks(t *testing.T, db *sql.DB) {
 	_, err := db.Exec("DELETE FROM tasks")
 	if err != nil {

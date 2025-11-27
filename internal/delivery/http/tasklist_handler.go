@@ -3,18 +3,27 @@ package http
 import (
 	"github.com/gofiber/fiber/v2"
 
+	"github.com/G20-00/task-management-service-go/internal/domain"
 	"github.com/G20-00/task-management-service-go/internal/usecase/task"
-	"github.com/G20-00/task-management-service-go/internal/usecase/tasklist"
 )
 
-// TaskListHandler handles HTTP requests for task list operations.
+// TaskListService define la interfaz para operaciones de listas de tareas.
+type TaskListService interface {
+	Create(name, description string) (*domain.TaskList, error)
+	GetAll() ([]*domain.TaskList, error)
+	GetByID(id string) (*domain.TaskList, error)
+	Update(id, name, description string) (*domain.TaskList, error)
+	Delete(id string) error
+}
+
+// TaskListHandler maneja las solicitudes HTTP para operaciones de listas de tareas.
 type TaskListHandler struct {
-	service     *tasklist.Service
+	service     TaskListService
 	taskService *task.Service
 }
 
 // NewTaskListHandler creates a new TaskListHandler instance.
-func NewTaskListHandler(service *tasklist.Service, taskService *task.Service) *TaskListHandler {
+func NewTaskListHandler(service TaskListService, taskService *task.Service) *TaskListHandler {
 	return &TaskListHandler{
 		service:     service,
 		taskService: taskService,

@@ -7,6 +7,7 @@ import (
 	taskusecase "github.com/G20-00/task-management-service-go/internal/usecase/task"
 )
 
+// MockRepository is a mock implementation of the task repositor
 // MockRepository is a mock implementation of the task repository
 type MockRepository struct {
 	tasks []*domain.Task

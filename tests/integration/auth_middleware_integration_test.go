@@ -1,16 +1,18 @@
-package http
+package integration_test
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	httpdelivery "github.com/G20-00/task-management-service-go/internal/delivery/http"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 func TestProtectedEndpoint_WithoutJWT_ShouldFail(t *testing.T) {
 	app := fiber.New()
-	app.Get("/api/tasks", JWTMiddleware, func(c *fiber.Ctx) error {
+	app.Get("/api/tasks", httpdelivery.JWTMiddleware, func(c *fiber.Ctx) error {
 		return c.SendString("OK")
 	})
 
@@ -26,11 +28,11 @@ func TestProtectedEndpoint_WithoutJWT_ShouldFail(t *testing.T) {
 
 func TestProtectedEndpoint_WithJWT_ShouldPass(t *testing.T) {
 	app := fiber.New()
-	app.Get("/api/tasks", JWTMiddleware, func(c *fiber.Ctx) error {
+	app.Get("/api/tasks", httpdelivery.JWTMiddleware, func(c *fiber.Ctx) error {
 		return c.SendString("OK")
 	})
 
-	token, err := GenerateJWT("test-user")
+	token, err := httpdelivery.GenerateJWT("test-user")
 	if err != nil {
 		t.Fatalf("No se pudo generar token: %v", err)
 	}

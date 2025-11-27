@@ -1,4 +1,4 @@
-package repository
+package integration_test
 
 import (
 	"database/sql"
@@ -11,6 +11,7 @@ import (
 	_ "github.com/lib/pq"
 
 	"github.com/G20-00/task-management-service-go/internal/domain"
+	"github.com/G20-00/task-management-service-go/internal/infrastructure/repository"
 )
 
 func TestMain(m *testing.M) {
@@ -84,7 +85,7 @@ func TestPostgresTaskRepository_Create_Integration(t *testing.T) {
 		t.Fatalf("Failed to create test list: %v", err)
 	}
 
-	repo := NewPostgresTaskRepository(db)
+	repo := repository.NewPostgresTaskRepository(db)
 
 	now := time.Now()
 	task := &domain.Task{
@@ -127,7 +128,7 @@ func TestPostgresTaskRepository_GetByID_Integration(t *testing.T) {
 
 	cleanupTasks(t, db)
 
-	repo := NewPostgresTaskRepository(db)
+	repo := repository.NewPostgresTaskRepository(db)
 
 	now := time.Now()
 	taskID := uuid.New().String()

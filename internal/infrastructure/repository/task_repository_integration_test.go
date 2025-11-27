@@ -6,14 +6,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/G20-00/task-management-service-go/internal/domain"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+
+	"github.com/G20-00/task-management-service-go/internal/domain"
 )
 
 func TestMain(m *testing.M) {
-	_ = godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		println("Warning: .env file not loaded:", err.Error())
+	}
 	os.Exit(m.Run())
 }
 
@@ -67,11 +70,14 @@ func cleanupTasks(t *testing.T, db *sql.DB) {
 
 func TestPostgresTaskRepository_Create_Integration(t *testing.T) {
 	db := getTestDB(t)
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			t.Errorf("Failed to close db: %v", err)
+		}
+	}()
 
 	cleanupTasks(t, db)
 
-	// Crear lista dummy para la clave foránea
 	listID := "test-list-id"
 	_, err := db.Exec(`INSERT INTO task_lists (id, name, created_at, updated_at) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`, listID, "Test List", time.Now(), time.Now())
 	if err != nil {
@@ -97,7 +103,6 @@ func TestPostgresTaskRepository_Create_Integration(t *testing.T) {
 		t.Fatalf("Failed to create task: %v", err)
 	}
 
-	// Verify task was created
 	var count int
 	err = db.QueryRow("SELECT COUNT(*) FROM tasks WHERE id = $1", task.ID).Scan(&count)
 	if err != nil {
@@ -114,13 +119,16 @@ func TestPostgresTaskRepository_Create_Integration(t *testing.T) {
 
 func TestPostgresTaskRepository_GetByID_Integration(t *testing.T) {
 	db := getTestDB(t)
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			t.Errorf("Failed to close db: %v", err)
+		}
+	}()
 
 	cleanupTasks(t, db)
 
 	repo := NewPostgresTaskRepository(db)
 
-	// Create a test task directly in the database
 	now := time.Now()
 	taskID := uuid.New().String()
 	_, err := db.Exec(`
@@ -132,7 +140,6 @@ func TestPostgresTaskRepository_GetByID_Integration(t *testing.T) {
 		t.Fatalf("Failed to insert test task: %v", err)
 	}
 
-	// Retrieve the task using the repository
 	task, err := repo.GetByID(taskID)
 	if err != nil {
 		t.Fatalf("Failed to get task: %v", err)

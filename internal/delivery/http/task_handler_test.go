@@ -131,7 +131,7 @@ func TestDeleteTask_ServiceErrorOther(t *testing.T) {
 	h := NewTaskHandler(&mockTaskService{
 		DeleteFn: func(id string) error { return errors.New("db error") },
 	})
-	app.Delete("/tasks/:taskId", h.DeleteTask)
+	app.Delete("/tasks/:id", h.DeleteTask)
 	req := httptest.NewRequest("DELETE", "/tasks/1", http.NoBody)
 	resp, err := app.Test(req)
 	if err != nil {
@@ -160,7 +160,7 @@ func TestCreateTask_InvalidBody(t *testing.T) {
 func TestUpdateTask_InvalidBody(t *testing.T) {
 	app := fiber.New()
 	h := NewTaskHandler(&mockTaskService{})
-	app.Put("/tasks/:taskId", h.UpdateTask)
+	app.Put("/tasks/:id", h.UpdateTask)
 	req := httptest.NewRequest("PUT", "/tasks/1", strings.NewReader("{malformed_json"))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := app.Test(req)
@@ -190,7 +190,7 @@ func TestGetTask_EmptyID(t *testing.T) {
 func TestDeleteTask_EmptyID(t *testing.T) {
 	app := fiber.New()
 	h := NewTaskHandler(&mockTaskService{})
-	app.Delete("/tasks/:taskId", h.DeleteTask)
+	app.Delete("/tasks/:id", h.DeleteTask)
 	req := httptest.NewRequest("DELETE", "/tasks/", http.NoBody)
 	req.RequestURI = "/tasks/"
 	resp, err := app.Test(req)
@@ -290,7 +290,7 @@ func TestGetTasks_Filtered_Error(t *testing.T) {
 func TestUpdateTask_TitleRequired(t *testing.T) {
 	app := fiber.New()
 	h := NewTaskHandler(&mockTaskService{})
-	app.Put("/tasks/:taskId", h.UpdateTask)
+	app.Put("/tasks/:id", h.UpdateTask)
 	req := httptest.NewRequest("PUT", "/tasks/1", strings.NewReader(`{"status":"pending","priority":"high"}`))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := app.Test(req)
@@ -356,7 +356,7 @@ func TestDeleteTask_NotFound_Error(t *testing.T) {
 	h := NewTaskHandler(&mockTaskService{
 		DeleteFn: func(id string) error { return errors.New("task not found") },
 	})
-	app.Delete("/tasks/:taskId", h.DeleteTask)
+	app.Delete("/tasks/:id", h.DeleteTask)
 	req := httptest.NewRequest("DELETE", "/tasks/1", http.NoBody)
 	resp, err := app.Test(req)
 	if err != nil {
@@ -445,7 +445,7 @@ func TestGetTask_NotFound(t *testing.T) {
 func TestUpdateTask_BadRequest(t *testing.T) {
 	app := fiber.New()
 	h := NewTaskHandler(&mockTaskService{})
-	app.Put("/tasks/:taskId", h.UpdateTask)
+	app.Put("/tasks/:id", h.UpdateTask)
 	req := httptest.NewRequest("PUT", "/tasks/1", strings.NewReader("{"))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := app.Test(req)
@@ -463,7 +463,7 @@ func TestDeleteTask_Success(t *testing.T) {
 		DeleteFn: func(id string) error { return nil },
 	}
 	h := NewTaskHandler(mockService)
-	app.Delete("/tasks/:taskId", h.DeleteTask)
+	app.Delete("/tasks/:id", h.DeleteTask)
 	req := httptest.NewRequest("DELETE", "/tasks/1", http.NoBody)
 	resp, err := app.Test(req)
 	if err != nil {
@@ -647,7 +647,7 @@ func TestUpdateTask_Success(t *testing.T) {
 func TestDeleteTask_MissingID(t *testing.T) {
 	app := fiber.New()
 	h := NewTaskHandler(&mockTaskService{})
-	app.Delete("/tasks/:taskId", h.DeleteTask)
+	app.Delete("/tasks/:id", h.DeleteTask)
 	req := httptest.NewRequest("DELETE", "/tasks/", http.NoBody)
 	req.RequestURI = "/tasks/"
 	resp, err := app.Test(req)

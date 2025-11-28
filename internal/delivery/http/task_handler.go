@@ -130,6 +130,9 @@ func (h *TaskHandler) GetTasks(c *fiber.Ctx) error {
 // GetTask retrieves a single task by ID.
 func (h *TaskHandler) GetTask(c *fiber.Ctx) error {
 	id := c.Params("id")
+	if id == "" {
+		id = c.Params("taskId")
+	}
 
 	if id == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -172,7 +175,11 @@ func (h *TaskHandler) GetTask(c *fiber.Ctx) error {
 
 // UpdateTask updates an existing task.
 func (h *TaskHandler) UpdateTask(c *fiber.Ctx) error {
-	id := c.Params("id")
+	       id := c.Params("id")
+	       // Compatibilidad con rutas anidadas tipo /lists/:id/tasks/:taskId/state
+	       if c.Params("taskId") != "" {
+		       id = c.Params("taskId")
+	       }
 
 	if id == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -247,7 +254,11 @@ func (h *TaskHandler) UpdateTask(c *fiber.Ctx) error {
 
 // DeleteTask deletes a task by ID.
 func (h *TaskHandler) DeleteTask(c *fiber.Ctx) error {
-	id := c.Params("id")
+	       id := c.Params("id")
+	       // Compatibilidad con rutas anidadas tipo /lists/:id/tasks/:taskId
+	       if c.Params("taskId") != "" {
+		       id = c.Params("taskId")
+	       }
 
 	if id == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

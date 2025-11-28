@@ -1,0 +1,366 @@
+{
+  "info": {
+    "_postman_id": "80207374-3c3f-4f69-a7a0-0b71aff23995",
+    "name": "Management-service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Jwt",
+      "id": "e568cc80-f23f-4392-8b54-44fd4c006a02",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"user_id\": \"demo\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "login"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Crear una lista",
+      "id": "522dc688-4dcc-49ea-b99f-68c2f583a19a",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTMzNjcsInVzZXJfaWQiOiJkZW1vIn0.3U8drIH8VWJ9zf2Ppbxn4yXQVYn06KiXIkJsN8X_w6g",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Mi lista\",\r\n  \"description\": \"Lista de tareas personales\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/lists",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "lists"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Crear una tarea",
+      "id": "b212664c-074f-4ad4-b686-244512ca82e8",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTM2MDEsInVzZXJfaWQiOiJkZW1vIn0.ZXEEAGxmPtFMaIetEFDJeyD9vBEBhF6y84c0XBLeypM",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"list_id\": \"ed5358f9-4ef6-4259-875c-39e931782f9f\",\r\n  \"title\": \"Comprar pan\",\r\n  \"priority\": \"high\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/tasks",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Listar tareas",
+      "id": "47399fc0-67d1-40c9-acdd-d73e80808ae1",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTM2MDEsInVzZXJfaWQiOiJkZW1vIn0.ZXEEAGxmPtFMaIetEFDJeyD9vBEBhF6y84c0XBLeypM",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Obtener todas las listas",
+      "id": "4e19455b-3fe7-4656-936e-216262a64a9d",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTM2MDEsInVzZXJfaWQiOiJkZW1vIn0.ZXEEAGxmPtFMaIetEFDJeyD9vBEBhF6y84c0XBLeypM",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/lists",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "lists"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Actualizar una tarea",
+      "id": "cfa480ef-0c3d-4747-86f1-83d9c15dc044",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTM2MDEsInVzZXJfaWQiOiJkZW1vIn0.ZXEEAGxmPtFMaIetEFDJeyD9vBEBhF6y84c0XBLeypM",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"list_id\": \"ed5358f9-4ef6-4259-875c-39e931782f9f\",\r\n  \"title\": \"Comprar pan y leche\",\r\n  \"description\": \"No olvidar la leche\",\r\n  \"status\": \"in-progress\",\r\n  \"priority\": \"medium\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/ea40fbb5-a796-40ab-9df1-944b10c17df5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "ea40fbb5-a796-40ab-9df1-944b10c17df5"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Obtener una tarea por ID",
+      "id": "1e994a7d-f0a4-49b8-b3ab-2eff3ab7810b",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTM2MDEsInVzZXJfaWQiOiJkZW1vIn0.ZXEEAGxmPtFMaIetEFDJeyD9vBEBhF6y84c0XBLeypM",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/ea40fbb5-a796-40ab-9df1-944b10c17df5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "ea40fbb5-a796-40ab-9df1-944b10c17df5"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Eliminar una tarea",
+      "id": "c59252dc-3db8-43b0-a9c0-1370c43054b5",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTM2MDEsInVzZXJfaWQiOiJkZW1vIn0.ZXEEAGxmPtFMaIetEFDJeyD9vBEBhF6y84c0XBLeypM",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/ea40fbb5-a796-40ab-9df1-944b10c17df5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "ea40fbb5-a796-40ab-9df1-944b10c17df5"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Listar tareas Copy",
+      "id": "3698cd84-e23f-4966-b504-db18d07e56e1",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTM2MDEsInVzZXJfaWQiOiJkZW1vIn0.ZXEEAGxmPtFMaIetEFDJeyD9vBEBhF6y84c0XBLeypM",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/tasks/ea40fbb5-a796-40ab-9df1-944b10c17df5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "tasks",
+            "ea40fbb5-a796-40ab-9df1-944b10c17df5"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Obtener una lista por ID",
+      "id": "9c54a10a-7e68-48be-ae0b-5338c05acc2e",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTM2MDEsInVzZXJfaWQiOiJkZW1vIn0.ZXEEAGxmPtFMaIetEFDJeyD9vBEBhF6y84c0XBLeypM",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/lists/ed5358f9-4ef6-4259-875c-39e931782f9f",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "lists",
+            "ed5358f9-4ef6-4259-875c-39e931782f9f"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Actualizar una lista",
+      "id": "468d1568-1f2c-4803-a25e-54fbf3cfbe24",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTM2MDEsInVzZXJfaWQiOiJkZW1vIn0.ZXEEAGxmPtFMaIetEFDJeyD9vBEBhF6y84c0XBLeypM",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Nombre actualizado\",\r\n  \"description\": \"Descripción actualizada\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/lists/ed5358f9-4ef6-4259-875c-39e931782f9f",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "lists",
+            "ed5358f9-4ef6-4259-875c-39e931782f9f"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Eliminar una lista",
+      "id": "d06c0824-4556-4111-aa61-57e5979f2f67",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQzOTM2MDEsInVzZXJfaWQiOiJkZW1vIn0.ZXEEAGxmPtFMaIetEFDJeyD9vBEBhF6y84c0XBLeypM",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/lists/ed5358f9-4ef6-4259-875c-39e931782f9f",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "lists",
+            "ed5358f9-4ef6-4259-875c-39e931782f9f"
+          ]
+        }
+      }
+    }
+  ]
+}

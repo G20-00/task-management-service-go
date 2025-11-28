@@ -1,3 +1,16 @@
+# Pruebas con Postman
+
+Se creó el archivo `postman/collections/New Collection.postman_collection.json` con todos los endpoints principales y el token de autenticación listo para usar.
+
+## ¿Cómo importar la colección en Postman?
+
+1. Abre Postman.
+2. Haz clic en **Import** (o "Importar").
+3. Selecciona el archivo `postman/collections/New Collection.postman_collection.json` de este repositorio.
+4. Una vez importada, verás la colección "Management-service" con todas las peticiones listas para probar.
+5. Todos los endpoints ya incluyen el header `Authorization` con un token válido, por lo que puedes probar la API directamente.
+
+¡Listo! Así puedes validar rápidamente todos los endpoints desde Postman.
 ## Requisito para Makefile en Windows
 
 Para usar los comandos automáticos del Makefile en Windows, primero instala make con Chocolatey:
